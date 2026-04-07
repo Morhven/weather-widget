@@ -17,15 +17,23 @@ function Scarf({ x, y, w }: { x: number; y: number; w: number }) {
   );
 }
 
-function Beanie({ cx, topY }: { cx: number; topY: number }) {
+function Beanie({ cx, topY, id }: { cx: number; topY: number; id: string }) {
+  const domePath = `M${cx - 20} ${topY + 14} C${cx - 22} ${topY + 4} ${cx - 10} ${topY - 3} ${cx} ${topY - 3} C${cx + 10} ${topY - 3} ${cx + 22} ${topY + 4} ${cx + 20} ${topY + 14} Z`;
   return (
     <g>
-      <path
-        d={`M${cx - 20} ${topY + 14} C${cx - 22} ${topY + 4} ${cx - 10} ${topY - 3} ${cx} ${topY - 3} C${cx + 10} ${topY - 3} ${cx + 22} ${topY + 4} ${cx + 20} ${topY + 14}`}
-        fill="#FF5252"
-      />
-      <rect x={cx - 22} y={topY + 11} width={44} height={7} rx={3} fill="#CC3333" />
-      <rect x={cx - 19} y={topY + 2} width={38} height={5} rx={2} fill="white" opacity={0.22} />
+      <defs>
+        <clipPath id={id}>
+          <path d={domePath} />
+        </clipPath>
+      </defs>
+      {/* Dome — clipped so stripe can't overflow */}
+      <g clipPath={`url(#${id})`}>
+        <path d={domePath} fill="#FF5252" />
+        <rect x={cx - 20} y={topY + 2} width={40} height={6} fill="white" opacity={0.22} />
+      </g>
+      {/* Brim */}
+      <rect x={cx - 20} y={topY + 11} width={40} height={7} rx={3} fill="#CC3333" />
+      {/* Pompom */}
       <circle cx={cx} cy={topY - 10} r={8} fill="white" />
       <circle cx={cx - 2} cy={topY - 12} r={2.5} fill="#FF8A80" opacity={0.5} />
     </g>
@@ -63,7 +71,7 @@ export function SunCharacter({ temp }: Props) {
         : <path d={`M43 ${cy + 7} Q50 ${cy + 15} 57 ${cy + 7}`} stroke="#4E342E" strokeWidth={2.5} fill="none" strokeLinecap="round" />
       }
       {cold && <Scarf x={25} y={cy + 18} w={50} />}
-      {cold && <Beanie cx={50} topY={cy - 29} />}
+      {cold && <Beanie cx={50} topY={cy - 29} id="beanie-sun" />}
     </svg>
   );
 }
@@ -101,7 +109,7 @@ export function CloudCharacter({ temp }: Props) {
           <path d={`M53 43 Q57 40 61 43`} stroke={textCol} strokeWidth={2} strokeLinecap="round" />
           <path d={`M42 57 Q50 53 58 57`} stroke={textCol} strokeWidth={2.5} fill="none" strokeLinecap="round" />
           <Scarf x={17} y={61} w={66} />
-          <Beanie cx={50} topY={20} />
+          <Beanie cx={50} topY={20} id="beanie-cloud" />
         </>
       ) : (
         <path d={`M42 60 Q50 66 58 60`} stroke={textCol} strokeWidth={2.5} fill="none" strokeLinecap="round" />
