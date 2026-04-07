@@ -156,7 +156,7 @@ export default function Home() {
 
         {/* Character */}
         <div className="flex justify-center items-center relative z-10 -mt-2 -mb-2">
-          <div className="w-36 h-36">
+          <div className="w-44 h-44">
             {temp !== null && code !== null ? (
               <WeatherCharacter code={code} temp={temp} />
             ) : (
